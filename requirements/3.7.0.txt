@@ -1,0 +1,4 @@
+Django==2.1
+perf==1.5.1
+six==1.11.0
+ujson
