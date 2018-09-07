@@ -33,7 +33,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:' if os.environ.get('IN_MEMORY_DB') else 'db.sqlite3',
+        'NAME': ':memory:' if os.environ.get('IN_MEMORY_DB') else '/home/db.sqlite3',
     }
 }
 LOGGING = None
