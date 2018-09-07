@@ -18,6 +18,9 @@ RUN /root/.pyenv/bin/pyenv install $PY_VERSION
 RUN rm -rf /var/lib/apt/lists/*
 ENV PATH "/root/.pyenv/versions/$PY_VERSION/bin/:${PATH}"
 
+RUN git clone --depth 1 -b 4.1.0 https://github.com/wg/wrk.git /home/wrk && \
+    make -C /home/wrk > /dev/null
+
 ARG REQUIREMENTS
 COPY $REQUIREMENTS /home/src/requirements.txt
 RUN pip install -r /home/src/requirements.txt
