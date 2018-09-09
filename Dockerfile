@@ -8,7 +8,7 @@ RUN apt-get update && \
 	curl \
 	make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev
+    xz-utils tk-dev libffi-dev liblzma-dev nginx
 
 
 RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
@@ -28,6 +28,7 @@ RUN pip install -r /home/src/requirements.txt
 # add (the rest of) our code
 ARG SRC_DIR
 COPY $SRC_DIR /home/src/
+RUN mv /home/src/db.sqlite3 /home
 
 WORKDIR /home/src/
 ENTRYPOINT /home/src/run.sh
