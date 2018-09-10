@@ -3,3 +3,9 @@ perf==1.5.1
 six==1.11.0
 ujson
 uwsgi==2.0.17.1
+
+aiohttp==3.4.4
+cchardet
+aiosqlite==0.4.0
+
+sanic==0.8.1

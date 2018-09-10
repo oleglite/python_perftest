@@ -17,17 +17,19 @@ import django
 
 if django.VERSION[0] == 2:
     from django.urls import path
-    from .views import RecordCreate, RecordRead, index
+    from .views import RecordCreate, RecordRead, index, version
     urlpatterns = [
         path('record/create', RecordCreate.as_view()),
         path('record/read/<int:record_id>', RecordRead.as_view()),
+        path('version', version),
         path('', index),
     ]
 elif django.VERSION[0] == 1:
     from django.conf.urls import url
-    from .views import RecordCreate, RecordRead, index
+    from .views import RecordCreate, RecordRead, index, version
     urlpatterns = [
         url('record/create', RecordCreate.as_view()),
         url('record/read/(?P<record_id>[\d]+)', RecordRead.as_view()),
+        url('version', version),
         url('', index),
     ]

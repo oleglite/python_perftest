@@ -63,3 +63,7 @@ class RecordRead(View):
 
 def index(request):
     return HttpResponse("Hello")
+
+
+def version(request):
+    return HttpResponse("django_app")

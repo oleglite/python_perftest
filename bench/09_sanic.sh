@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-cd aiohttp_app
+cd sanic_app
 
 bash start.sh &
-sleep 5
+sleep 1
 
 
-bash /home/src/wrk/check.sh aiohttp_app
+bash /home/src/wrk/check.sh sanic_app
 if [ $? -ne 0 ]
 then
     echo "Failed"
