@@ -1,8 +1,13 @@
 import argparse
+import asyncio
 import logging.config
+import uvloop
 from aiohttp import web
 
 from record import get_record
+
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 logging.config.dictConfig({'version': 1, 'disable_existing_loggers': True})
