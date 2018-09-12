@@ -1,0 +1,211 @@
+Sending build context to Docker daemon  49.97MB
+Step 1/16 : FROM ubuntu:16.04
+ ---> b9e15a5d1e1a
+Step 2/16 : RUN apt-get update &&     apt-get upgrade -y &&     apt-get install -y 	git 	sqlite3 	curl 	make build-essential libssl-dev zlib1g-dev libbz2-dev     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev     xz-utils tk-dev libffi-dev liblzma-dev nginx
+ ---> Using cache
+ ---> 27fd36c0bbed
+Step 3/16 : RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+ ---> Using cache
+ ---> 8ac9eee594eb
+Step 4/16 : ARG PY_VERSION
+ ---> Using cache
+ ---> d6d9f140a355
+Step 5/16 : RUN /root/.pyenv/bin/pyenv install $PY_VERSION
+ ---> Using cache
+ ---> eea7869dc32f
+Step 6/16 : RUN rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> f2bad276a584
+Step 7/16 : ENV PATH "/root/.pyenv/versions/$PY_VERSION/bin/:${PATH}"
+ ---> Using cache
+ ---> 8d42b0d5e57a
+Step 8/16 : RUN git clone --depth 1 -b 4.1.0 https://github.com/wg/wrk.git /home/wrk &&     make -C /home/wrk > /dev/null
+ ---> Using cache
+ ---> d709331eac1c
+Step 9/16 : ARG REQUIREMENTS
+ ---> Using cache
+ ---> 04aa0cf95262
+Step 10/16 : COPY $REQUIREMENTS /home/src/requirements.txt
+ ---> Using cache
+ ---> 7da319dcee73
+Step 11/16 : RUN pip install -r /home/src/requirements.txt
+ ---> Using cache
+ ---> 4248efcab4c2
+Step 12/16 : ARG SRC_DIR
+ ---> Using cache
+ ---> d51827403302
+Step 13/16 : COPY $SRC_DIR /home/src/
+ ---> Using cache
+ ---> 886d1db78b23
+Step 14/16 : RUN mv /home/src/db.sqlite3 /home
+ ---> Using cache
+ ---> 8c7080a5c5d2
+Step 15/16 : WORKDIR /home/src/
+ ---> Using cache
+ ---> e5e17941f76c
+Step 16/16 : ENTRYPOINT /home/src/run.sh
+ ---> Using cache
+ ---> 7608115c661d
+Successfully built 7608115c661d
+Successfully tagged py36:latest
+.....................
+django_template: Mean +- std dev: 171 ms +- 5 ms
+.....................
+WARNING: the benchmark result may be unstable
+* the standard deviation (2.85 ms) is 16% of the mean (17.5 ms)
+
+Try to rerun the benchmark with more runs, values and/or loops.
+Run 'python -m perf system tune' command to reduce the system jitter.
+Use perf stats, perf dump and perf hist to analyze results.
+Use --quiet option to hide these warnings.
+
+python_startup: Mean +- std dev: 17.5 ms +- 2.9 ms
+.....................
+json_loads: Mean +- std dev: 551 us +- 8 us
+.....................
+json_loads: Mean +- std dev: 278 us +- 14 us
+.....................
+regex_v8: Mean +- std dev: 36.0 ms +- 1.2 ms
+.....................
+Total duration: 12.6 sec
+Start date: 2018-09-10 06:18:28
+End date: 2018-09-10 06:18:46
+Raw value minimum: 142 ms
+Raw value maximum: 181 ms
+
+Number of calibration run: 1
+Number of run with values: 20
+Total number of run: 21
+
+Number of warmup per run: 1
+Number of value per run: 3
+Loop iterations per value: 1024
+Total number of values: 60
+
+Minimum:         139 us
+Median +- MAD:   141 us +- 1 us
+Mean +- std dev: 141 us +- 5 us
+Maximum:         177 us
+
+  0th percentile: 139 us (-2% of the mean) -- minimum
+  5th percentile: 139 us (-2% of the mean)
+ 25th percentile: 140 us (-1% of the mean) -- Q1
+ 50th percentile: 141 us (-0% of the mean) -- median
+ 75th percentile: 142 us (+0% of the mean) -- Q3
+ 95th percentile: 143 us (+1% of the mean)
+100th percentile: 177 us (+25% of the mean) -- maximum
+
+Number of outlier (out of 136 us..145 us): 1
+
+bench_django_ping: Mean +- std dev: 141 us +- 5 us
+IN_MEMORY_DB True
+IN_MEMORY_DB True
+.IN_MEMORY_DB True
+.IN_MEMORY_DB True
+.IN_MEMORY_DB True
+.
+Total duration: 2.5 sec
+Start date: 2018-09-10 06:19:12
+End date: 2018-09-10 06:19:54
+Raw value minimum: 140 ms
+Raw value maximum: 151 ms
+
+Number of calibration run: 1
+Number of run with values: 3
+Total number of run: 4
+
+Number of warmup per run: 1
+Number of value per run: 3
+Loop iterations per value: 128
+Total number of values: 9
+
+Minimum:         1.10 ms
+Median +- MAD:   1.12 ms +- 0.02 ms
+Mean +- std dev: 1.13 ms +- 0.03 ms
+Maximum:         1.18 ms
+
+  0th percentile: 1.10 ms (-3% of the mean) -- minimum
+  5th percentile: 1.10 ms (-3% of the mean)
+ 25th percentile: 1.10 ms (-2% of the mean) -- Q1
+ 50th percentile: 1.12 ms (-1% of the mean) -- median
+ 75th percentile: 1.16 ms (+3% of the mean) -- Q3
+ 95th percentile: 1.18 ms (+4% of the mean)
+100th percentile: 1.18 ms (+4% of the mean) -- maximum
+
+Number of outlier (out of 1.01 ms..1.25 ms): 0
+
+bench_django_post: Mean +- std dev: 1.13 ms +- 0.03 ms
+IN_MEMORY_DB True
+IN_MEMORY_DB True
+.IN_MEMORY_DB True
+.IN_MEMORY_DB True
+.IN_MEMORY_DB True
+.
+Total duration: 2.3 sec
+Start date: 2018-09-10 06:20:20
+End date: 2018-09-10 06:21:02
+Raw value minimum: 128 ms
+Raw value maximum: 169 ms
+
+Number of calibration run: 1
+Number of run with values: 3
+Total number of run: 4
+
+Number of warmup per run: 1
+Number of value per run: 3
+Loop iterations per value: 128
+Total number of values: 9
+
+Minimum:         999 us
+Median +- MAD:   1.02 ms +- 0.02 ms
+Mean +- std dev: 1.06 ms +- 0.11 ms
+Maximum:         1.32 ms
+
+  0th percentile: 999 us (-6% of the mean) -- minimum
+  5th percentile: 1000 us (-6% of the mean)
+ 25th percentile: 1.01 ms (-5% of the mean) -- Q1
+ 50th percentile: 1.02 ms (-4% of the mean) -- median
+ 75th percentile: 1.03 ms (-3% of the mean) -- Q3
+ 95th percentile: 1.25 ms (+17% of the mean)
+100th percentile: 1.32 ms (+24% of the mean) -- maximum
+
+Number of outlier (out of 961 us..1079 us): 2
+
+bench_django_get: Mean +- std dev: 1.06 ms +- 0.11 ms
+IN_MEMORY_DB True
+IN_MEMORY_DB True
+.IN_MEMORY_DB True
+.IN_MEMORY_DB True
+.IN_MEMORY_DB True
+.
+Total duration: 2.5 sec
+Start date: 2018-09-10 06:21:28
+End date: 2018-09-10 06:22:10
+Raw value minimum: 141 ms
+Raw value maximum: 145 ms
+
+Number of calibration run: 1
+Number of run with values: 3
+Total number of run: 4
+
+Number of warmup per run: 1
+Number of value per run: 3
+Loop iterations per value: 64
+Total number of values: 9
+
+Minimum:         2.20 ms
+Median +- MAD:   2.23 ms +- 0.02 ms
+Mean +- std dev: 2.23 ms +- 0.02 ms
+Maximum:         2.26 ms
+
+  0th percentile: 2.20 ms (-1% of the mean) -- minimum
+  5th percentile: 2.20 ms (-1% of the mean)
+ 25th percentile: 2.22 ms (-1% of the mean) -- Q1
+ 50th percentile: 2.23 ms (-0% of the mean) -- median
+ 75th percentile: 2.25 ms (+1% of the mean) -- Q3
+ 95th percentile: 2.26 ms (+1% of the mean)
+100th percentile: 2.26 ms (+1% of the mean) -- maximum
+
+Number of outlier (out of 2.17 ms..2.30 ms): 0
+
+bench_django_post_get: Mean +- std dev: 2.23 ms +- 0.02 ms

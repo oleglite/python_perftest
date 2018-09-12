@@ -1,0 +1,130 @@
+Sending build context to Docker daemon   50.1MB
+Step 1/16 : FROM ubuntu:16.04
+ ---> b9e15a5d1e1a
+Step 2/16 : RUN apt-get update &&     apt-get upgrade -y &&     apt-get install -y 	git 	sqlite3 	curl 	make build-essential libssl-dev zlib1g-dev libbz2-dev     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev     xz-utils tk-dev libffi-dev liblzma-dev nginx
+ ---> Using cache
+ ---> 27fd36c0bbed
+Step 3/16 : RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+ ---> Using cache
+ ---> 8ac9eee594eb
+Step 4/16 : ARG PY_VERSION
+ ---> Using cache
+ ---> d6d9f140a355
+Step 5/16 : RUN /root/.pyenv/bin/pyenv install $PY_VERSION
+ ---> Using cache
+ ---> e29de4efade2
+Step 6/16 : RUN rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> b78176150b41
+Step 7/16 : ENV PATH "/root/.pyenv/versions/$PY_VERSION/bin/:${PATH}"
+ ---> Using cache
+ ---> ddb3b2c19bce
+Step 8/16 : RUN git clone --depth 1 -b 4.1.0 https://github.com/wg/wrk.git /home/wrk &&     make -C /home/wrk > /dev/null
+ ---> Using cache
+ ---> 839358c903b3
+Step 9/16 : ARG REQUIREMENTS
+ ---> Using cache
+ ---> b4624e2e1f35
+Step 10/16 : COPY $REQUIREMENTS /home/src/requirements.txt
+ ---> Using cache
+ ---> b0060316a81d
+Step 11/16 : RUN pip install -r /home/src/requirements.txt
+ ---> Using cache
+ ---> ac3e095938e9
+Step 12/16 : ARG SRC_DIR
+ ---> Using cache
+ ---> 819a7a2cda63
+Step 13/16 : COPY $SRC_DIR /home/src/
+ ---> 5459da2c8d48
+Step 14/16 : RUN mv /home/src/db.sqlite3 /home
+ ---> Running in f965ec8e03f8
+Removing intermediate container f965ec8e03f8
+ ---> 4e3d9fee2abf
+Step 15/16 : WORKDIR /home/src/
+ ---> Running in 39d56eb6e868
+Removing intermediate container 39d56eb6e868
+ ---> a5a02d27be11
+Step 16/16 : ENTRYPOINT /home/src/run.sh
+ ---> Running in 2c7041b26053
+Removing intermediate container 2c7041b26053
+ ---> 436a0d2f11da
+Successfully built 436a0d2f11da
+Successfully tagged py27:latest
+[uWSGI] getting INI configuration from uwsgi.ini
+-e 
+Check API...
+Hello{"info": "To avoid this failure, you must instantiate your", "is_budget": true, "expires_at": null, "description": "In addition, Django applies the following rule: if you set editable=False on the model field, any form created from the model via ModelForm will not include that field.", "business": "TYYJJB", "region": "europe", "updated_at": "2018-09-09T11:46:52.352", "owner": "hqsalmon", "summary": "postponed evaluation of type annotations", "project": "treehook", "customer": "jtmoore", "approved_by": "tewagner", "purpose": "Overriding the default fields", "closed": false, "department": "Salary", "total_budget": 650012.5, "created_at": "2018-09-09T11:46:52.352"}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    10  100    10    0     0   1306      0 --:--:-- --:--:-- --:--:--  1428
+django_app
+APP django_app is ok
+
+Run wrk...
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   344.30us  149.42us   6.45ms   95.17%
+    Req/Sec     2.39k   335.33     3.02k    60.33%
+  Latency Distribution
+     50%  318.00us
+     75%  374.00us
+     90%  439.00us
+     99%  634.00us
+  142706 requests in 1.00m, 15.24MB read
+  Socket errors: connect 0, read 142706, write 0, timeout 0
+Requests/sec:   2378.32
+Transfer/sec:    260.13KB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.66ms  375.32us  12.40ms   83.97%
+    Req/Sec   549.59     72.84   690.00     61.50%
+  Latency Distribution
+     50%    1.57ms
+     75%    1.79ms
+     90%    2.09ms
+     99%    2.89ms
+  32837 requests in 1.00m, 24.14MB read
+  Socket errors: connect 0, read 32837, write 0, timeout 0
+Requests/sec:    547.08
+Transfer/sec:    411.91KB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  4 threads and 60 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.31ms    3.48ms 207.66ms   85.52%
+    Req/Sec     2.63k   332.95     4.06k    69.51%
+  Latency Distribution
+     50%    4.70ms
+     75%    6.37ms
+     90%    8.56ms
+     99%   16.57ms
+  628486 requests in 1.00m, 67.13MB read
+  Socket errors: connect 0, read 628474, write 0, timeout 0
+Requests/sec:  10457.94
+Transfer/sec:      1.12MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  4 threads and 60 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.40ms    9.34ms  85.71ms   76.64%
+    Req/Sec   640.45     53.07     0.91k    69.44%
+  Latency Distribution
+     50%   19.87ms
+     75%   25.82ms
+     90%   35.69ms
+     99%   52.45ms
+  153017 requests in 1.00m, 112.51MB read
+  Socket errors: connect 0, read 153014, write 0, timeout 0
+Requests/sec:   2548.35
+Transfer/sec:      1.87MB

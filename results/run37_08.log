@@ -1,0 +1,155 @@
+Sending build context to Docker daemon  50.08MB
+Step 1/16 : FROM ubuntu:16.04
+ ---> b9e15a5d1e1a
+Step 2/16 : RUN apt-get update &&     apt-get upgrade -y &&     apt-get install -y 	git 	sqlite3 	curl 	make build-essential libssl-dev zlib1g-dev libbz2-dev     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev     xz-utils tk-dev libffi-dev liblzma-dev nginx
+ ---> Using cache
+ ---> 27fd36c0bbed
+Step 3/16 : RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+ ---> Using cache
+ ---> 8ac9eee594eb
+Step 4/16 : ARG PY_VERSION
+ ---> Using cache
+ ---> d6d9f140a355
+Step 5/16 : RUN /root/.pyenv/bin/pyenv install $PY_VERSION
+ ---> Using cache
+ ---> 2feaf9f2f241
+Step 6/16 : RUN rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> 2a3647cd9a00
+Step 7/16 : ENV PATH "/root/.pyenv/versions/$PY_VERSION/bin/:${PATH}"
+ ---> Using cache
+ ---> 771d8afe5d3e
+Step 8/16 : RUN git clone --depth 1 -b 4.1.0 https://github.com/wg/wrk.git /home/wrk &&     make -C /home/wrk > /dev/null
+ ---> Using cache
+ ---> ef4f36b4234c
+Step 9/16 : ARG REQUIREMENTS
+ ---> Using cache
+ ---> 0995f8894bd4
+Step 10/16 : COPY $REQUIREMENTS /home/src/requirements.txt
+ ---> Using cache
+ ---> ea59eac2561b
+Step 11/16 : RUN pip install -r /home/src/requirements.txt
+ ---> Using cache
+ ---> 148b46d3f247
+Step 12/16 : ARG SRC_DIR
+ ---> Using cache
+ ---> 44c225682725
+Step 13/16 : COPY $SRC_DIR /home/src/
+ ---> 606a61b61e22
+Step 14/16 : RUN mv /home/src/db.sqlite3 /home
+ ---> Running in e4bfadc0cca9
+Removing intermediate container e4bfadc0cca9
+ ---> c7a4f4e3df88
+Step 15/16 : WORKDIR /home/src/
+ ---> Running in db8085100185
+Removing intermediate container db8085100185
+ ---> 37f8d3c94213
+Step 16/16 : ENTRYPOINT /home/src/run.sh
+ ---> Running in 873b349e700f
+Removing intermediate container 873b349e700f
+ ---> e15c3b672fe8
+Successfully built e15c3b672fe8
+Successfully tagged py37:latest
+start
+======== Running on http://unix:/tmp/aiohttp_app_4.sock: ========
+(Press CTRL+C to quit)
+======== Running on http://unix:/tmp/aiohttp_app_2.sock: ========
+(Press CTRL+C to quit)
+======== Running on http://unix:/tmp/aiohttp_app_3.sock: ========
+(Press CTRL+C to quit)
+======== Running on http://unix:/tmp/aiohttp_app_1.sock: ========
+(Press CTRL+C to quit)
+
+Check API...
+Hello{"summary": "postponed evaluation of type annotations", "description": "In addition, Django applies the following rule: if you set editable=False on the model field, any form created from the model via ModelForm will not include that field.", "project": "treehook", "region": "europe", "total_budget": 650012.5, "info": "To avoid this failure, you must instantiate your", "purpose": "Overriding the default fields", "department": "Salary", "business": "TYYJJB", "is_budget": 1, "customer": "jtmoore", "owner": "hqsalmon", "approved_by": "tewagner", "created_at": "2018-09-09 11:46:52.352830", "updated_at": "2018-09-09 11:46:52.352839", "expires_at": null, "closed": 0}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    11  100    11    0     0   7953      0 --:--:-- --:--:-- --:--:-- 11000
+aiohttp_app
+APP aiohttp_app is ok
+
+Run wrk...
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   334.11us  140.17us   4.28ms   93.58%
+    Req/Sec     3.04k   470.68     4.18k    65.67%
+  Latency Distribution
+     50%  308.00us
+     75%  361.00us
+     90%  435.00us
+     99%  647.00us
+  181727 requests in 1.00m, 30.49MB read
+Requests/sec:   3028.68
+Transfer/sec:    520.41KB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.23ms  399.73us  12.02ms   76.91%
+    Req/Sec   138.40      5.24   151.00     68.33%
+  Latency Distribution
+     50%    7.34ms
+     75%    7.48ms
+     90%    7.60ms
+     99%    7.85ms
+  8278 requests in 1.00m, 6.69MB read
+Requests/sec:    137.87
+Transfer/sec:    114.17KB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  4 threads and 60 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.77ms    2.52ms  25.89ms   73.89%
+    Req/Sec     4.24k   229.16     6.53k    78.96%
+  Latency Distribution
+     50%    3.28ms
+     75%    4.97ms
+     90%    7.00ms
+     99%   12.29ms
+  1012413 requests in 1.00m, 169.88MB read
+Requests/sec:  16860.20
+Transfer/sec:      2.83MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  4 threads and 60 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.17ms    9.03ms  73.45ms   67.66%
+    Req/Sec   651.79     35.48   810.00     69.61%
+  Latency Distribution
+     50%   21.91ms
+     75%   28.73ms
+     90%   35.70ms
+     99%   48.36ms
+  155861 requests in 1.00m, 126.04MB read
+Requests/sec:   2593.58
+Transfer/sec:      2.10MB
+stop
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   4504   696 pts/0    Ss+  06:20   0:00 /bin/sh -c /hom
+root         8  0.0  0.0  18024  2756 pts/0    S+   06:20   0:00 bash /home/src/
+root         9  0.0  0.0  18028  2860 pts/0    S+   06:20   0:00 bash 08_aiohttp
+root        12 43.7  0.3 2746996 57480 pts/0   Sl+  06:20   1:47 python app.py -
+root        13 44.0  0.3 2746992 57376 pts/0   Sl+  06:20   1:47 python app.py -
+root        14 43.8  0.3 2681476 56536 pts/0   Sl+  06:20   1:47 python app.py -
+root        15 43.6  0.3 2763780 56356 pts/0   Sl+  06:20   1:46 python app.py -
+root      1935  0.0  0.0  18028  2748 pts/0    S+   06:24   0:00 bash stop.sh
+root      1938  0.0  0.0  34424  2860 pts/0    R+   06:24   0:00 ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   4504   696 pts/0    Ss+  06:20   0:00 /bin/sh -c /hom
+root         8  0.0  0.0  18024  2756 pts/0    S+   06:20   0:00 bash /home/src/
+root         9  0.0  0.0  18028  2860 pts/0    S+   06:20   0:00 bash 08_aiohttp
+root        12 42.8  0.3 2271628 56084 pts/0   Sl+  06:20   1:47 python app.py -
+root        13 43.1  0.3 2288016 56744 pts/0   Sl+  06:20   1:47 python app.py -
+root        14 42.9  0.3 2247088 54464 pts/0   Sl+  06:20   1:47 python app.py -
+root        15 42.7  0.3 2238368 55072 pts/0   Sl+  06:20   1:46 python app.py -
+root      1935  0.0  0.0  18028  2828 pts/0    S+   06:24   0:00 bash stop.sh
+root      1944  0.0  0.0  34424  2744 pts/0    R+   06:24   0:00 ps aux

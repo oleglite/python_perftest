@@ -1,0 +1,127 @@
+Sending build context to Docker daemon  50.09MB
+Step 1/16 : FROM ubuntu:16.04
+ ---> b9e15a5d1e1a
+Step 2/16 : RUN apt-get update &&     apt-get upgrade -y &&     apt-get install -y 	git 	sqlite3 	curl 	make build-essential libssl-dev zlib1g-dev libbz2-dev     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev     xz-utils tk-dev libffi-dev liblzma-dev nginx
+ ---> Using cache
+ ---> 27fd36c0bbed
+Step 3/16 : RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+ ---> Using cache
+ ---> 8ac9eee594eb
+Step 4/16 : ARG PY_VERSION
+ ---> Using cache
+ ---> d6d9f140a355
+Step 5/16 : RUN /root/.pyenv/bin/pyenv install $PY_VERSION
+ ---> Using cache
+ ---> eea7869dc32f
+Step 6/16 : RUN rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> f2bad276a584
+Step 7/16 : ENV PATH "/root/.pyenv/versions/$PY_VERSION/bin/:${PATH}"
+ ---> Using cache
+ ---> 8d42b0d5e57a
+Step 8/16 : RUN git clone --depth 1 -b 4.1.0 https://github.com/wg/wrk.git /home/wrk &&     make -C /home/wrk > /dev/null
+ ---> Using cache
+ ---> d709331eac1c
+Step 9/16 : ARG REQUIREMENTS
+ ---> Using cache
+ ---> 04aa0cf95262
+Step 10/16 : COPY $REQUIREMENTS /home/src/requirements.txt
+ ---> Using cache
+ ---> c6f107fca485
+Step 11/16 : RUN pip install -r /home/src/requirements.txt
+ ---> Using cache
+ ---> 6a5c1ba425a4
+Step 12/16 : ARG SRC_DIR
+ ---> Using cache
+ ---> cf8c19e17b0a
+Step 13/16 : COPY $SRC_DIR /home/src/
+ ---> c6631bffd5f0
+Step 14/16 : RUN mv /home/src/db.sqlite3 /home
+ ---> Running in 4a68fcf8f301
+Removing intermediate container 4a68fcf8f301
+ ---> 3333e6691997
+Step 15/16 : WORKDIR /home/src/
+ ---> Running in 385ed3ee0879
+Removing intermediate container 385ed3ee0879
+ ---> e92549b470f0
+Step 16/16 : ENTRYPOINT /home/src/run.sh
+ ---> Running in d5c351f5de06
+Removing intermediate container d5c351f5de06
+ ---> 327b5c54ca30
+Successfully built 327b5c54ca30
+Successfully tagged py36:latest
+start
+
+Check API...
+Hello{"summary":"postponed evaluation of type annotations","description":"In addition, Django applies the following rule: if you set editable=False on the model field, any form created from the model via ModelForm will not include that field.","project":"treehook","region":"europe","total_budget":650012.5,"info":"To avoid this failure, you must instantiate your","purpose":"Overriding the default fields","department":"Salary","business":"TYYJJB","is_budget":1,"customer":"jtmoore","owner":"hqsalmon","approved_by":"tewagner","created_at":"2018-09-09 11:46:52.352830","updated_at":"2018-09-09 11:46:52.352839","expires_at":null,"closed":0}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100     9  100     9    0     0   5882      0 --:--:-- --:--:-- --:--:--  9000
+sanic_app
+APP sanic_app is ok
+
+Run wrk...
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    91.87us   50.88us   4.50ms   96.20%
+    Req/Sec    11.03k     1.54k   12.45k    81.17%
+  Latency Distribution
+     50%   82.00us
+     75%   89.00us
+     90%  114.00us
+     99%  192.00us
+  658329 requests in 1.00m, 77.22MB read
+Requests/sec:  10971.99
+Transfer/sec:      1.29MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.80ms  250.08us  11.83ms   87.65%
+    Req/Sec   146.97      4.92   161.00     64.50%
+  Latency Distribution
+     50%    6.83ms
+     75%    6.93ms
+     90%    7.00ms
+     99%    7.17ms
+  8792 requests in 1.00m, 6.26MB read
+Requests/sec:    146.44
+Transfer/sec:    106.83KB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  4 threads and 60 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.24ms  754.38us  16.21ms   90.21%
+    Req/Sec    12.74k     2.71k   21.19k    63.04%
+  Latency Distribution
+     50%    1.07ms
+     75%    1.44ms
+     90%    1.88ms
+     99%    4.38ms
+  3041844 requests in 1.00m, 356.81MB read
+Requests/sec:  50632.38
+Transfer/sec:      5.94MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  4 threads and 60 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.10ms    8.18ms  68.40ms   66.10%
+    Req/Sec   789.89    181.90     1.18k    59.27%
+  Latency Distribution
+     50%   16.45ms
+     75%   25.36ms
+     90%   31.89ms
+     99%   39.11ms
+  188855 requests in 1.00m, 134.54MB read
+Requests/sec:   3142.71
+Transfer/sec:      2.24MB
+stop
