@@ -1,0 +1,401 @@
+Sending build context to Docker daemon  50.16MB
+Step 1/16 : FROM ubuntu:16.04
+ ---> b9e15a5d1e1a
+Step 2/16 : RUN apt-get update &&     apt-get upgrade -y &&     apt-get install -y 	git 	sqlite3 	curl 	make build-essential libssl-dev zlib1g-dev libbz2-dev     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev     xz-utils tk-dev libffi-dev liblzma-dev nginx
+ ---> Using cache
+ ---> 27fd36c0bbed
+Step 3/16 : RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+ ---> Using cache
+ ---> 8ac9eee594eb
+Step 4/16 : ARG PY_VERSION
+ ---> Using cache
+ ---> d6d9f140a355
+Step 5/16 : RUN /root/.pyenv/bin/pyenv install $PY_VERSION
+ ---> Using cache
+ ---> eea7869dc32f
+Step 6/16 : RUN rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> f2bad276a584
+Step 7/16 : ENV PATH "/root/.pyenv/versions/$PY_VERSION/bin/:${PATH}"
+ ---> Using cache
+ ---> 8d42b0d5e57a
+Step 8/16 : RUN git clone --depth 1 -b 4.1.0 https://github.com/wg/wrk.git /home/wrk &&     make -C /home/wrk > /dev/null
+ ---> Using cache
+ ---> d709331eac1c
+Step 9/16 : ARG REQUIREMENTS
+ ---> Using cache
+ ---> 04aa0cf95262
+Step 10/16 : COPY $REQUIREMENTS /home/src/requirements.txt
+ ---> Using cache
+ ---> c6f107fca485
+Step 11/16 : RUN pip install -r /home/src/requirements.txt
+ ---> Using cache
+ ---> 6a5c1ba425a4
+Step 12/16 : ARG SRC_DIR
+ ---> Using cache
+ ---> cf8c19e17b0a
+Step 13/16 : COPY $SRC_DIR /home/src/
+ ---> de72bb50c744
+Step 14/16 : RUN mv /home/src/db.sqlite3 /home
+ ---> Running in e84e0089af32
+Removing intermediate container e84e0089af32
+ ---> 757b9b08f497
+Step 15/16 : WORKDIR /home/src/
+ ---> Running in 231fffadf13c
+Removing intermediate container 231fffadf13c
+ ---> c5459c991bb9
+Step 16/16 : ENTRYPOINT /home/src/run.sh
+ ---> Running in a80344d46083
+Removing intermediate container a80344d46083
+ ---> f2a769d8a269
+Successfully built f2a769d8a269
+Successfully tagged py36:latest
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   4504   784 pts/0    Ss+  12:58   0:00 /bin/sh -c /hom
+root         8  0.0  0.0  18028  2728 pts/0    S+   12:58   0:00 bash /home/src/
+root         9  0.0  0.0  18028  2644 pts/0    S+   12:58   0:00 bash 07_django_
+root        11  0.0  0.0  34424  2868 pts/0    R+   12:58   0:00 ps aux
+[uWSGI] getting INI configuration from uwsgi.ini
+-e 
+Check API...
+Hello{"summary": "postponed evaluation of type annotations", "description": "In addition, Django applies the following rule: if you set editable=False on the model field, any form created from the model via ModelForm will not include that field.", "project": "treehook", "region": "europe", "total_budget": 650012.5, "info": "To avoid this failure, you must instantiate your", "purpose": "Overriding the default fields", "department": "Salary", "business": "TYYJJB", "is_budget": true, "customer": "jtmoore", "owner": "hqsalmon", "approved_by": "tewagner", "created_at": "2018-09-09T11:46:52.352", "updated_at": "2018-09-09T11:46:52.352", "expires_at": null, "closed": false}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    10  100    10    0     0   1937      0 --:--:-- --:--:-- --:--:--  2000
+django_app
+APP django_app is ok
+
+Run wrk...
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   310.11us  135.65us   5.59ms   95.22%
+    Req/Sec     2.60k   328.60     3.15k    62.33%
+  Latency Distribution
+     50%  284.00us
+     75%  331.00us
+     90%  391.00us
+     99%  586.00us
+  155122 requests in 1.00m, 16.57MB read
+  Socket errors: connect 0, read 155121, write 0, timeout 0
+Requests/sec:   2585.26
+Transfer/sec:    282.76KB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.86ms  394.09us  11.63ms   84.95%
+    Req/Sec   495.20     57.72   590.00     64.33%
+  Latency Distribution
+     50%    1.76ms
+     75%    1.99ms
+     90%    2.32ms
+     99%    3.25ms
+  29596 requests in 1.00m, 21.76MB read
+  Socket errors: connect 0, read 29595, write 0, timeout 0
+Requests/sec:    492.94
+Transfer/sec:    371.15KB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.95ms  552.79us  13.09ms   91.58%
+    Req/Sec     8.54k   259.73     9.13k    71.33%
+  Latency Distribution
+     50%    0.87ms
+     75%    1.03ms
+     90%    1.32ms
+     99%    3.25ms
+  510222 requests in 1.00m, 54.50MB read
+  Socket errors: connect 0, read 510220, write 0, timeout 0
+Requests/sec:   8502.83
+Transfer/sec:      0.91MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.10ms    2.65ms  27.60ms   72.64%
+    Req/Sec     1.75k    61.01     1.92k    68.67%
+  Latency Distribution
+     50%    4.55ms
+     75%    6.44ms
+     90%    8.57ms
+     99%   13.82ms
+  104744 requests in 1.00m, 77.02MB read
+  Socket errors: connect 0, read 104742, write 0, timeout 0
+Requests/sec:   1744.08
+Transfer/sec:      1.28MB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.52ms    3.89ms 211.67ms   72.21%
+    Req/Sec    10.02k   453.95    11.26k    69.70%
+  Latency Distribution
+     50%    7.82ms
+     75%    9.66ms
+     90%   11.56ms
+     99%   15.86ms
+  598602 requests in 1.00m, 63.94MB read
+  Socket errors: connect 0, read 598601, write 0, timeout 0
+Requests/sec:   9966.00
+Transfer/sec:      1.06MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.41ms   10.98ms 117.56ms   75.90%
+    Req/Sec     2.29k   159.91     2.99k    69.90%
+  Latency Distribution
+     50%   39.37ms
+     75%   45.93ms
+     90%   56.38ms
+     99%   76.01ms
+  136875 requests in 1.00m, 100.64MB read
+  Socket errors: connect 0, read 136870, write 0, timeout 0
+Requests/sec:   2280.53
+Transfer/sec:      1.68MB
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   4504   784 pts/0    Ss+  12:58   0:00 /bin/sh -c /hom
+root         8  0.0  0.0  18028  2728 pts/0    S+   12:58   0:00 bash /home/src/
+root        57  0.0  0.0  18028  2740 pts/0    S+   13:04   0:00 bash 08_aiohttp
+root        59  0.0  0.0  34424  2892 pts/0    R+   13:04   0:00 ps aux
+start
+======== Running on http://unix:/tmp/aiohttp_app_1.sock: ========
+(Press CTRL+C to quit)======== Running on http://unix:/tmp/aiohttp_app_4.sock: ========
+(Press CTRL+C to quit)======== Running on http://unix:/tmp/aiohttp_app_3.sock: ========
+(Press CTRL+C to quit)======== Running on http://unix:/tmp/aiohttp_app_2.sock: ========
+(Press CTRL+C to quit)
+
+
+
+
+Check API...
+Hello{"summary": "postponed evaluation of type annotations", "description": "In addition, Django applies the following rule: if you set editable=False on the model field, any form created from the model via ModelForm will not include that field.", "project": "treehook", "region": "europe", "total_budget": 650012.5, "info": "To avoid this failure, you must instantiate your", "purpose": "Overriding the default fields", "department": "Salary", "business": "TYYJJB", "is_budget": 1, "customer": "jtmoore", "owner": "hqsalmon", "approved_by": "tewagner", "created_at": "2018-09-09 11:46:52.352830", "updated_at": "2018-09-09 11:46:52.352839", "expires_at": null, "closed": 0}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    11  100    11    0     0   2072      0 --:--:-- --:--:-- --:--:--  2200
+aiohttp_app
+APP aiohttp_app is ok
+
+Run wrk...
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   336.21us  141.23us   4.82ms   93.96%
+    Req/Sec     3.03k   463.12     4.07k    64.83%
+  Latency Distribution
+     50%  310.00us
+     75%  362.00us
+     90%  433.00us
+     99%  652.00us
+  180652 requests in 1.00m, 30.31MB read
+Requests/sec:   3010.59
+Transfer/sec:    517.30KB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.23ms  301.92us  10.97ms   81.52%
+    Req/Sec   138.33      5.18   151.00     68.67%
+  Latency Distribution
+     50%    7.27ms
+     75%    7.41ms
+     90%    7.52ms
+     99%    7.73ms
+  8272 requests in 1.00m, 6.69MB read
+Requests/sec:    137.79
+Transfer/sec:    114.10KB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.86ms  611.72us   8.05ms   82.25%
+    Req/Sec    12.61k   461.14    13.95k    73.04%
+  Latency Distribution
+     50%  660.00us
+     75%    1.12ms
+     90%    1.72ms
+     99%    2.91ms
+  754012 requests in 1.00m, 126.52MB read
+Requests/sec:  12546.05
+Transfer/sec:      2.11MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.92ms  796.27us  13.81ms   69.53%
+    Req/Sec     1.45k    23.64     1.52k    66.17%
+  Latency Distribution
+     50%    6.88ms
+     75%    7.41ms
+     90%    7.92ms
+     99%    9.16ms
+  86495 requests in 1.00m, 69.95MB read
+Requests/sec:   1441.07
+Transfer/sec:      1.17MB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.49ms    4.72ms  37.55ms   71.99%
+    Req/Sec    16.66k   570.99    18.47k    74.50%
+  Latency Distribution
+     50%    5.55ms
+     75%    8.85ms
+     90%   12.89ms
+     99%   21.73ms
+  995138 requests in 1.00m, 166.98MB read
+Requests/sec:  16573.33
+Transfer/sec:      2.78MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.62ms   15.01ms 121.72ms   68.62%
+    Req/Sec     2.61k    80.24     2.81k    71.17%
+  Latency Distribution
+     50%   37.08ms
+     75%   47.61ms
+     90%   58.76ms
+     99%   79.92ms
+  155757 requests in 1.00m, 125.96MB read
+Requests/sec:   2591.65
+Transfer/sec:      2.10MB
+stop
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   4504   784 pts/0    Ss+  12:58   0:00 /bin/sh -c /hom
+root         8  0.0  0.0  18028  2728 pts/0    S+   12:58   0:00 bash /home/src/
+root     23519  0.0  0.0  18024  2760 pts/0    S+   13:10   0:00 bash 09_sanic.s
+root     23521  0.0  0.0  34424  2908 pts/0    R+   13:10   0:00 ps aux
+start
+
+Check API...
+Hello{"summary":"postponed evaluation of type annotations","description":"In addition, Django applies the following rule: if you set editable=False on the model field, any form created from the model via ModelForm will not include that field.","project":"treehook","region":"europe","total_budget":650012.5,"info":"To avoid this failure, you must instantiate your","purpose":"Overriding the default fields","department":"Salary","business":"TYYJJB","is_budget":1,"customer":"jtmoore","owner":"hqsalmon","approved_by":"tewagner","created_at":"2018-09-09 11:46:52.352830","updated_at":"2018-09-09 11:46:52.352839","expires_at":null,"closed":0}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100     9  100     9    0     0   1726      0 --:--:-- --:--:-- --:--:--  1800
+sanic_app
+APP sanic_app is ok
+
+Run wrk...
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.36us   63.86us   4.87ms   99.49%
+    Req/Sec    11.69k   506.56    12.20k    94.51%
+  Latency Distribution
+     50%   83.00us
+     75%   85.00us
+     90%   90.00us
+     99%  132.00us
+  698834 requests in 1.00m, 81.97MB read
+Requests/sec:  11627.98
+Transfer/sec:      1.36MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.78ms  228.95us  10.75ms   86.78%
+    Req/Sec   147.41      4.85   161.00     67.67%
+  Latency Distribution
+     50%    6.81ms
+     75%    6.91ms
+     90%    6.97ms
+     99%    7.14ms
+  8818 requests in 1.00m, 6.28MB read
+Requests/sec:    146.89
+Transfer/sec:    107.15KB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   269.38us  389.93us  16.30ms   98.03%
+    Req/Sec    43.10k     1.36k   44.74k    77.20%
+  Latency Distribution
+     50%  222.00us
+     75%  295.00us
+     90%  366.00us
+     99%    1.61ms
+  2578252 requests in 1.00m, 302.43MB read
+Requests/sec:  42899.43
+Transfer/sec:      5.03MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.97ms    0.94ms  13.89ms   63.16%
+    Req/Sec     1.44k    26.44     1.52k    71.17%
+  Latency Distribution
+     50%    6.91ms
+     75%    7.62ms
+     90%    8.23ms
+     99%    9.23ms
+  86021 requests in 1.00m, 61.28MB read
+Requests/sec:   1433.00
+Transfer/sec:      1.02MB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.89ms    1.07ms  18.77ms   70.69%
+    Req/Sec    54.36k     0.94k   55.51k    87.00%
+  Latency Distribution
+     50%    1.64ms
+     75%    2.39ms
+     90%    3.39ms
+     99%    4.90ms
+  3245598 requests in 1.00m, 380.71MB read
+Requests/sec:  54074.84
+Transfer/sec:      6.34MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.95ms    6.31ms  75.21ms   64.79%
+    Req/Sec     3.05k   110.40     3.32k    73.33%
+  Latency Distribution
+     50%   31.62ms
+     75%   37.96ms
+     90%   41.82ms
+     99%   47.90ms
+  181992 requests in 1.00m, 129.65MB read
+Requests/sec:   3030.15
+Transfer/sec:      2.16MB
+stop

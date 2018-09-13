@@ -1,0 +1,234 @@
+Sending build context to Docker daemon  50.15MB
+Step 1/16 : FROM ubuntu:16.04
+ ---> b9e15a5d1e1a
+Step 2/16 : RUN apt-get update &&     apt-get upgrade -y &&     apt-get install -y 	git 	sqlite3 	curl 	make build-essential libssl-dev zlib1g-dev libbz2-dev     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev     xz-utils tk-dev libffi-dev liblzma-dev nginx
+ ---> Using cache
+ ---> 27fd36c0bbed
+Step 3/16 : RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+ ---> Using cache
+ ---> 8ac9eee594eb
+Step 4/16 : ARG PY_VERSION
+ ---> Using cache
+ ---> d6d9f140a355
+Step 5/16 : RUN /root/.pyenv/bin/pyenv install $PY_VERSION
+ ---> Using cache
+ ---> e29de4efade2
+Step 6/16 : RUN rm -rf /var/lib/apt/lists/*
+ ---> Using cache
+ ---> b78176150b41
+Step 7/16 : ENV PATH "/root/.pyenv/versions/$PY_VERSION/bin/:${PATH}"
+ ---> Using cache
+ ---> ddb3b2c19bce
+Step 8/16 : RUN git clone --depth 1 -b 4.1.0 https://github.com/wg/wrk.git /home/wrk &&     make -C /home/wrk > /dev/null
+ ---> Using cache
+ ---> 839358c903b3
+Step 9/16 : ARG REQUIREMENTS
+ ---> Using cache
+ ---> b4624e2e1f35
+Step 10/16 : COPY $REQUIREMENTS /home/src/requirements.txt
+ ---> Using cache
+ ---> b0060316a81d
+Step 11/16 : RUN pip install -r /home/src/requirements.txt
+ ---> Using cache
+ ---> ac3e095938e9
+Step 12/16 : ARG SRC_DIR
+ ---> Using cache
+ ---> 819a7a2cda63
+Step 13/16 : COPY $SRC_DIR /home/src/
+ ---> 4bde673458ed
+Step 14/16 : RUN mv /home/src/db.sqlite3 /home
+ ---> Running in b9ac1e951aeb
+Removing intermediate container b9ac1e951aeb
+ ---> a609181d67a3
+Step 15/16 : WORKDIR /home/src/
+ ---> Running in 29ea01597853
+Removing intermediate container 29ea01597853
+ ---> 24ca22ba1f33
+Step 16/16 : ENTRYPOINT /home/src/run.sh
+ ---> Running in 7dbc73b703f5
+Removing intermediate container 7dbc73b703f5
+ ---> 20a863d977cd
+Successfully built 20a863d977cd
+Successfully tagged py27:latest
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   4504   696 pts/0    Ss+  12:51   0:00 /bin/sh -c /hom
+root         8  0.0  0.0  18028  2776 pts/0    S+   12:51   0:00 bash /home/src/
+root         9  0.0  0.0  18028  2744 pts/0    S+   12:51   0:00 bash 07_django_
+root        11  0.0  0.0  34424  2844 pts/0    R+   12:51   0:00 ps aux
+[uWSGI] getting INI configuration from uwsgi.ini
+-e 
+Check API...
+Hello{"info": "To avoid this failure, you must instantiate your", "is_budget": true, "expires_at": null, "description": "In addition, Django applies the following rule: if you set editable=False on the model field, any form created from the model via ModelForm will not include that field.", "business": "TYYJJB", "region": "europe", "updated_at": "2018-09-09T11:46:52.352", "owner": "hqsalmon", "summary": "postponed evaluation of type annotations", "project": "treehook", "customer": "jtmoore", "approved_by": "tewagner", "purpose": "Overriding the default fields", "closed": false, "department": "Salary", "total_budget": 650012.5, "created_at": "2018-09-09T11:46:52.352"}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    10  100    10    0     0   1441      0 --:--:-- --:--:-- --:--:--  1666
+django_app
+APP django_app is ok
+
+Run wrk...
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   324.72us  122.26us   5.71ms   93.73%
+    Req/Sec     2.52k   319.99     3.06k    63.17%
+  Latency Distribution
+     50%  300.00us
+     75%  351.00us
+     90%  413.00us
+     99%  596.00us
+  150653 requests in 1.00m, 16.09MB read
+  Socket errors: connect 0, read 150652, write 0, timeout 0
+Requests/sec:   2510.86
+Transfer/sec:    274.63KB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 1 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.58ms  329.54us  10.88ms   85.72%
+    Req/Sec   576.11     66.33   676.00     63.50%
+  Latency Distribution
+     50%    1.50ms
+     75%    1.69ms
+     90%    1.96ms
+     99%    2.75ms
+  34427 requests in 1.00m, 25.31MB read
+  Socket errors: connect 0, read 34427, write 0, timeout 0
+Requests/sec:    573.49
+Transfer/sec:    431.80KB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07ms    0.88ms  18.11ms   93.72%
+    Req/Sec     8.30k   216.01     8.89k    68.00%
+  Latency Distribution
+     50%    0.87ms
+     75%    1.09ms
+     90%    1.56ms
+     99%    5.49ms
+  495458 requests in 1.00m, 52.92MB read
+  Socket errors: connect 0, read 495458, write 0, timeout 0
+Requests/sec:   8257.16
+Transfer/sec:      0.88MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 10 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.91ms    2.81ms  29.30ms   73.83%
+    Req/Sec     1.90k    73.48     2.13k    68.61%
+  Latency Distribution
+     50%    4.29ms
+     75%    6.20ms
+     90%    8.58ms
+     99%   14.34ms
+  113669 requests in 1.00m, 83.58MB read
+  Socket errors: connect 0, read 113668, write 0, timeout 0
+Requests/sec:   1893.87
+Transfer/sec:      1.39MB
+
+WRK PING BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.80ms    5.75ms 211.41ms   88.27%
+    Req/Sec     9.80k   468.12    11.04k    68.13%
+  Latency Distribution
+     50%    7.98ms
+     75%    9.86ms
+     90%   11.97ms
+     99%   16.93ms
+  584679 requests in 1.00m, 62.45MB read
+  Socket errors: connect 0, read 584678, write 0, timeout 0
+Requests/sec:   9743.31
+Transfer/sec:      1.04MB
+
+WRK GET BENCH:
+==========================================
+Running 1m test @ http://localhost:80
+  1 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.15ms   11.25ms 109.00ms   74.54%
+    Req/Sec     2.64k   198.41     3.24k    71.19%
+  Latency Distribution
+     50%   34.39ms
+     75%   40.72ms
+     90%   51.79ms
+     99%   70.89ms
+  157615 requests in 1.00m, 115.89MB read
+  Socket errors: connect 0, read 157612, write 0, timeout 0
+Requests/sec:   2626.18
+Transfer/sec:      1.93MB
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   4504   696 pts/0    Ss+  12:51   0:00 /bin/sh -c /hom
+root         8  0.0  0.0  18028  2776 pts/0    S+   12:51   0:00 bash /home/src/
+root        57  0.0  0.0  18028  2728 pts/0    S+   12:57   0:00 bash 08_aiohttp
+root        59  0.0  0.0  34424  2840 pts/0    R+   12:57   0:00 ps aux
+start
+  File "app.py", line 16
+    async def handle_ping(request):
+            ^
+SyntaxError: invalid syntax
+  File "app.py", line 16
+    async def handle_ping(request):
+            ^
+SyntaxError: invalid syntax
+  File "app.py", line 16
+    async def handle_ping(request):
+            ^
+SyntaxError: invalid syntax
+  File "app.py", line 16
+    async def handle_ping(request):
+            ^
+SyntaxError: invalid syntax
+
+Check API...
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body bgcolor="white">
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx/1.10.3 (Ubuntu)</center>
+</body>
+</html>
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body bgcolor="white">
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx/1.10.3 (Ubuntu)</center>
+</body>
+</html>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   182  100   182    0     0  34726      0 --:--:-- --:--:-- --:--:-- 36400
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Invalid app version aiohttp_app
+
+
+
+
+====================
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0   4504   696 pts/0    Ss+  12:51   0:00 /bin/sh -c /hom
+root         8  0.0  0.0  18028  2776 pts/0    S+   12:51   0:00 bash /home/src/
+root        57  0.0  0.0  18028  2872 pts/0    S+   12:57   0:00 bash 08_aiohttp
+root        68  0.0  0.0 124972  1416 ?        Ss   12:57   0:00 nginx: master p
+root        69  0.0  0.0 125344  3176 ?        S    12:57   0:00 nginx: worker p
+root        70  0.0  0.0 125344  3176 ?        S    12:57   0:00 nginx: worker p
+root        71  0.0  0.0 125344  3176 ?        S    12:57   0:00 nginx: worker p
+root        72  0.0  0.0 125344  3176 ?        S    12:57   0:00 nginx: worker p
+root        73  0.0  0.0  18032  2836 pts/0    S+   12:57   0:00 bash /home/src/
+root        81  0.0  0.0  34424  2744 pts/0    R+   12:57   0:00 ps aux
+====================
+Failed
+Failed
