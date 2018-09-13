@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 cd aiohttp_app
+sleep 5 && ps aux
 
 bash start.sh &
 sleep 5

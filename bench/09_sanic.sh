@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 cd sanic_app
+sleep 5 && ps aux
 
 bash start.sh &
 sleep 1

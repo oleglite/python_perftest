@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 cd django_app
+sleep 5 && ps aux
 
 uwsgi uwsgi.ini &
 sleep 1
